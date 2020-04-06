@@ -18,6 +18,26 @@ var express = require("express");
 var http = require("http");
 var path = require("path");
 var logger = require("morgan");
+var mongoose = require("mongoose");
+var Employee = require("./models/employee");
+
+//mongo database connection
+var MongoDB = "mongodb+srv://user:tumbleweed@buwebdev-cluster-1-xhsyh.mongodb.net/test";
+mongoose.connect(MongoDB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+mongoose.Promise = global.Promise;
+
+var db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "MongoDB connection error: "));
+
+db.once("open", function() {
+  console.log("Application connected to mLab MongoDB instance!");
+});
+
 
 var app = express();
 
