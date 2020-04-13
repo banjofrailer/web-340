@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('header.ejs') %>
+
+  <body>
+    <%- include('navbar.ejs') %>
+
+    <div role="main" class="container w-50" >
+      <br /><br />
+
+      <h2 class="display-3">Employee Details</h2>
+      <% if (employees.length) { %>
+        <h2 class="display-4">List of Employees</h2><br />
+        <a class="text-info" href="/new">Add New</a>
+        <table class="table table-dark table-striped table-hover">
+            <thead class="thead‐dark">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% employees.forEach(function (entry) { %>
+            <tr>
+                <td><%= entry.firstName %></td>
+                <td><%= entry.lastName %></td>
+            </tr>
+
+            </tbody>
+            <% }) %>
+        </table>
+        <% } else { %>
+        No entries! <a href="/new">Add one!</a>
+        <% } %>
+
+      <a class="text-info" href="/">&larr; OK</a>
+    </div>
+
+    <%- include('scripts.ejs') %>
+  </body>
+</html>
