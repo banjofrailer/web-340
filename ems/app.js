@@ -56,6 +56,8 @@ app.use(helmet.xssFilter());
 app.use(bodyParser.urlencoded({extended: true}));
 //use cookie-parser
 app.use(cookieParser());
+//set up csrf protection
+var csrfProtection = csrf({cookie: true});
 //use csrf protection
 app.use(csrfProtection);
 app.use(function(request, response, next){
@@ -63,9 +65,8 @@ app.use(function(request, response, next){
   response.cookie("XSRF-TOKEN", token);
   response.locals.csrfToken = token;
   next();
-})
-//set up csrf protection
-var csrfProtection = csrf({cookie: true});
+});
+
 
 app.get("/", function(request, response) {
   response.render("index", {
@@ -74,10 +75,55 @@ app.get("/", function(request, response) {
   });
 });
 
+app.get("/new", function(request, response){
+  response.render("new", {
+    title: "New"
+  });
+});
+
 app.post("/process", function(request, response){
-  console.log(request.body.firstName);
+  //console.log(request.body.firstName);
+  if(!request.body.txtFirstName) {
+    response.status(400).send("Everyone has a first name.");
+    return;
+  }
+
+  //get data from request
+var firstName = request.body.txtFirstName;
+var lastName = request.body.txtLastName;
+console.log(firstName + " " + lastName);
+
+//employee model
+var employee = new Employee({
+  firstName: firstName,
+  lastName: lastName
+});
+
+//save employee
+employee.save(function(error) {
+  if(error) {
+    console.log(error);
+    throw error;
+  } else {
+    console.log(firstName + " " + lastName + " successfully saved.");
+  }
   response.redirect("/");
+});
+  
+});
+
+//find
+app.get("/list", function(request, response){
+  Employee.find({}, function(error, employees){
+    if(error) throw error;
+    response.render("list", {
+      title: "Employees",
+      employees: employees
+    })
+  })
 })
+
+
 
 http.createServer(app).listen(8080, function() {
   console.log("Application started on port 8080!");
