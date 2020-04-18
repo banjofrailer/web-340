@@ -123,7 +123,26 @@ app.get("/list", function(request, response){
   })
 })
 
+app.get("/view/:queryName", function (request, response) {
+  var queryName = request.params.queryName;
+  console.log(queryName);
 
+  Employee.find({ lastName: queryName }, function (error, employees) {
+    if (error) throw error;
+
+    console.log(employees);
+
+    if (employees.length > 0) {
+      response.render("view", {
+        title: "Employee Record",
+
+        employee: employees,
+      });
+    } else {
+      response.redirect("/list");
+    }
+  });
+});
 
 http.createServer(app).listen(8080, function() {
   console.log("Application started on port 8080!");
