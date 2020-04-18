@@ -9,10 +9,10 @@
 */
 
 // Require statement that imports the header.js file from my root directory
-const header = require('../kovar-header.js');
+//const header = require('../kovar-header.js');
 
 // Call the console.log() function and output a well-formatted header
-console.log(header.display('Sarah', 'Kovar', 'Exercise 6.4'));
+//console.log(header.display('Sarah', 'Kovar', 'Exercise 6.4'));
 
 var express = require("express");
 var http = require("http");
@@ -144,6 +144,6 @@ app.get("/view/:queryName", function (request, response) {
   });
 });
 
-http.createServer(app).listen(8080, function() {
-  console.log("Application started on port 8080!");
-});
+
+app.set("port", process.env.PORT || 8080);
+http.createServer(app).listen(app.get("port"), function() { console.log("Application started on port " + app.get("port"))});
